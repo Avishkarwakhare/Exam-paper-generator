@@ -418,7 +418,7 @@ Contributions are welcome! Please follow these steps:
 
 **Avishkar Wakhare**
 - GitHub: [@Avishkarwakhare](https://github.com/Avishkarwakhare)
-- Repository: [Exam-paper-generator ](https://github.com/Avishkarwakhare/Exam-paper-generator.git)
+- Repository: [Exam-paper-generator](https://github.com/Avishkarwakhare/Exam-paper-generator)
 
 ---
 
