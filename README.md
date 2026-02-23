@@ -416,9 +416,9 @@ Contributions are welcome! Please follow these steps:
 
 ## 👨‍💻 Author
 
-**Allen Lenoy**
-- GitHub: [@AllenLenoy](https://github.com/AllenLenoy)
-- Repository: [examgenerator](https://github.com/AllenLenoy/examgenerator)
+**Avishkar Wakhare**
+- GitHub: [@Avishkarwakhare](https://github.com/Avishkarwakhare)
+- Repository: [Exam-paper-generator](https://github.com/Avishkarwakhare/Exam-paper-generator)
 
 ---
 
