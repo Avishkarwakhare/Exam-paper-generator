@@ -26,6 +26,11 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Root route
+app.get('/', (req, res) => {
+    res.json({ message: 'Exam Generator API is running' });
+});
+
 // Routes
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);

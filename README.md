@@ -189,7 +189,7 @@ A comprehensive full-stack examination management platform with role-based acces
 
 1. **Clone Repository**
 ```bash
-git clone https://github.com/AllenLenoy/examgenerator.git
+git https://github.com/Avishkarwakhare/Exam-paper-generator.git
 cd examgenerator
 ```
 
@@ -416,9 +416,9 @@ Contributions are welcome! Please follow these steps:
 
 ## 👨‍💻 Author
 
-**Allen Lenoy**
-- GitHub: [@AllenLenoy](https://github.com/AllenLenoy)
-- Repository: [examgenerator](https://github.com/AllenLenoy/examgenerator)
+**Avishkar Wakhare**
+- GitHub: [@Avishkarwakhare](https://github.com/Avishkarwakhare)
+- Repository: [Exam-paper-generator ](https://github.com/Avishkarwakhare/Exam-paper-generator.git)
 
 ---
 
