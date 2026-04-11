@@ -32,7 +32,7 @@ export function ExamViewPage() {
             if (questionsResponse.status === 200) {
                 questionsData = questionsResponse.data;
             }
-
+            if (questionsData && questionsData.questions) {
                 // Filter questions that match this exam's criteria
                 // Get questions that were created around the same time as the exam
                 // and match the subject
