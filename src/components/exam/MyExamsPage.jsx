@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, Calendar, Clock, Trash2, Eye } from 'lucide-react';
@@ -15,12 +16,8 @@ export function MyExamsPage() {
 
     const fetchExams = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/teacher/exams', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const response = await api.get('/teacher/exams');
+            const data = response.data;
 
             if (!response.ok) {
                 throw new Error('Failed to fetch exams');
@@ -40,13 +37,7 @@ export function MyExamsPage() {
         if (!confirm('Are you sure you want to delete this exam?')) return;
 
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/teacher/exams/${examId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            await api.delete(`/teacher/exams/${examId}`);
 
             if (!response.ok) {
                 throw new Error('Failed to delete exam');

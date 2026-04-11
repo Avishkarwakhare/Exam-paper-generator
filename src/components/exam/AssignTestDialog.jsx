@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -35,12 +36,8 @@ export function AssignTestDialog({ open, onOpenChange, studentId, studentName, o
     const fetchExams = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/teacher/exams', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const response = await api.get('/teacher/exams');
+            const data = response.data;
 
             if (!response.ok) {
                 throw new Error('Failed to fetch exams');
@@ -64,18 +61,12 @@ export function AssignTestDialog({ open, onOpenChange, studentId, studentName, o
 
         setAssigning(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/teacher/assignments', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    examId: selectedExam,
-                    studentIds: [studentId]
-                })
+            const response = await api.post('/teacher/assignments', {
+                examId: selectedExam,
+                studentIds: [studentId]
             });
+
+            const data = response.data;
 
             if (!response.ok) {
                 throw new Error('Failed to assign exam');

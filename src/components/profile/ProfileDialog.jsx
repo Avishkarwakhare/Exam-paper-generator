@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -95,20 +96,13 @@ export function ProfileDialog({ open, onOpenChange, currentUser, onProfileUpdate
                 experience: formData.experience
             };
 
-            const response = await fetch('http://localhost:5000/api/auth/profile', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(profileData)
-            });
+            const response = await api.put('/auth/profile', profileData);
 
-            if (!response.ok) {
+            if (response.status !== 200) {
                 throw new Error('Failed to update profile');
             }
 
-            const data = await response.json();
+            const data = response.data;
             toast.success('Profile updated successfully!');
             onProfileUpdate?.();
             onOpenChange(false);

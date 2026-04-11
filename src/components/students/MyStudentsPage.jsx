@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,18 +21,8 @@ export function MyStudentsPage() {
 
     const fetchStudents = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/teacher/students', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch students');
-            }
-
-            const data = await response.json();
+            const response = await api.get('/teacher/students');
+            const data = response.data;
             setStudents(data.students || []);
         } catch (error) {
             console.error('Error fetching students:', error);

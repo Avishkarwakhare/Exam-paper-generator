@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 import { useQuestionBank } from '@/context/QuestionBankContext';
 
 import { Button } from '@/components/ui/button';
@@ -180,20 +181,16 @@ export function ExamGenerator() {
 
         try {
           // Add timestamp to ensure different requests each time
-          const response = await fetch('http://localhost:5000/api/ai/generate-questions', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              subject: examDetails.subject,
-              topic: examDetails.topics || `${examDetails.subject} general topics`,
-              difficulty: section.difficulty,
-              count: parseInt(section.count),
-              timestamp: Date.now() // Force new generation
-            })
+          const response = await api.post('/ai/generate-questions', {
+            subject: examDetails.subject,
+            topic: examDetails.topics || `${examDetails.subject} general topics`,
+            difficulty: section.difficulty,
+            count: parseInt(section.count),
+            timestamp: Date.now() // Force new generation
           });
 
-          if (response.ok) {
-            const data = await response.json();
+          if (response.status === 200) {
+            const data = response.data;
             // Add section metadata to AI-generated questions
             sectionQuestions = data.questions.map(q => ({
               ...q,

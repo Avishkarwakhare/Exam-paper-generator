@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import api from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -66,20 +67,8 @@ export function AIQuestionGenerator() {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/ai/generate-questions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to generate questions');
-            }
-
-            const data = await response.json();
+            const response = await api.post('/ai/generate-questions', formData);
+            const data = response.data;
 
             // Add each question to the question bank
             data.questions.forEach(question => {

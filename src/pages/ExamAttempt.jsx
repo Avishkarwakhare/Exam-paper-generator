@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import api from '@/lib/api';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +10,6 @@ import { CheckCircle2, XCircle, AlertCircle, Home } from "lucide-react";
 // CONFIGURATION
 // TODO: Replace this with a valid ID from the backend (GET /api/templates)
 const TEMPLATE_ID = "template-1";
-const API_BASE = "http://localhost:5000/api";
 
 export default function ExamAttempt() {
     const navigate = useNavigate();
@@ -25,20 +25,12 @@ export default function ExamAttempt() {
         const startExam = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${API_BASE}/attempts/start`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        templateId: TEMPLATE_ID,
-                        studentId: "student_1"
-                    })
+                const response = await api.post('/attempts/start', {
+                    templateId: TEMPLATE_ID,
+                    studentId: "student_1"
                 });
 
-                if (!response.ok) {
-                    throw new Error('Failed to start exam. Check if Template ID is valid.');
-                }
-
-                const data = await response.json();
+                const data = response.data;
                 setAttemptData(data); // { attemptId, questions: [...] }
             } catch (err) {
                 setError(err.message);
@@ -64,15 +56,8 @@ export default function ExamAttempt() {
 
         try {
             setSubmitting(true);
-            const response = await fetch(`${API_BASE}/attempts/${attemptData.attemptId}/submit`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ answers })
-            });
-
-            if (!response.ok) throw new Error('Submission failed');
-
-            const resultData = await response.json();
+            const response = await api.post(`/attempts/${attemptData.attemptId}/submit`, { answers });
+            const resultData = response.data;
             setResult(resultData); // { score, totalQuestions, correctAnswers, ... }
         } catch (err) {
             alert("Error submitting exam: " + err.message);

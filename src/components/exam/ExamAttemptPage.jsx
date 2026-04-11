@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,13 +26,8 @@ export function ExamAttemptPage() {
 
     const startExam = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/api/student/assignments/${assignmentId}/start`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const response = await api.post(`/student/assignments/${assignmentId}/start`);
+            const data = response.data;
 
             if (!response.ok) {
                 throw new Error('Failed to start exam');
@@ -67,14 +63,8 @@ export function ExamAttemptPage() {
                 selectedOption: parseInt(selectedOption)
             }));
 
-            const response = await fetch(`http://localhost:5000/api/student/assignments/${assignmentId}/submit`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ answers: formattedAnswers })
-            });
+            const response = await api.post(`/student/assignments/${assignmentId}/submit`, { answers: formattedAnswers });
+            const data = response.data;
 
             if (!response.ok) {
                 throw new Error('Failed to submit exam');

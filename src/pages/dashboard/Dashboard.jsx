@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,42 +43,32 @@ function DashboardOverview() {
     fetchDashboardData();
   }, []);
 
-  const fetchDashboardData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const headers = {
-        'Authorization': `Bearer ${token}`
-      };
-
       // Fetch current user
-      const userResponse = await fetch('http://localhost:5000/api/auth/me', { headers });
-      const userData = await userResponse.json();
-      setCurrentUser(userData.user);
-
+      const userResponse = await api.get('/auth/me');
+      setCurrentUser(userResponse.data.user);
+  
       // Fetch questions
-      const questionsResponse = await fetch('http://localhost:5000/api/teacher/questions', { headers });
-      const questionsData = await questionsResponse.json();
-
+      const questionsResponse = await api.get('/teacher/questions');
+  
       // Fetch exams
-      const examsResponse = await fetch('http://localhost:5000/api/teacher/exams', { headers });
-      const examsData = await examsResponse.json();
-
+      const examsResponse = await api.get('/teacher/exams');
+  
       // Fetch students
-      const studentsResponse = await fetch('http://localhost:5000/api/teacher/students', { headers });
-      const studentsData = await studentsResponse.json();
-
+      const studentsResponse = await api.get('/teacher/students');
+  
       setStats({
-        totalQuestions: questionsData.questions?.length || 0,
-        totalExams: examsData.exams?.length || 0
+        totalQuestions: questionsResponse.data.questions?.length || 0,
+        totalExams: examsResponse.data.exams?.length || 0
       });
-
+  
       // Get 5 most recent exams
-      const sortedExams = (examsData.exams || [])
+      const sortedExams = (examsResponse.data.exams || [])
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 5);
       setRecentExams(sortedExams);
-
-      setStudents(studentsData.students || []);
+  
+      setStudents(studentsResponse.data.students || []);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -251,19 +242,8 @@ function MyExamsPage() {
 
   const fetchExams = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/teacher/exams', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch exams');
-      }
-
-      const data = await response.json();
-      setExams(data.exams || []);
+      const response = await api.get('/teacher/exams');
+      setExams(response.data.exams || []);
     } catch (error) {
       console.error('Error fetching exams:', error);
     } finally {
@@ -275,18 +255,7 @@ function MyExamsPage() {
     if (!confirm('Are you sure you want to delete this exam?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/teacher/exams/${examId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete exam');
-      }
-
+      await api.delete(`/teacher/exams/${examId}`);
       fetchExams(); // Refresh list
     } catch (error) {
       console.error('Error deleting exam:', error);
@@ -396,12 +365,8 @@ export default function Dashboard() {
 
   const fetchUserData = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/auth/me', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await response.json();
-      setCurrentUser(data.user);
+      const response = await api.get('/auth/me');
+      setCurrentUser(response.data.user);
     } catch (error) {
       console.error('Error fetching user:', error);
     }

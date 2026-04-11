@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import api from '@/lib/api';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,15 +20,10 @@ export function ExamPreview({ exam, onBack, onRegenerate, editable = false, onUp
     window.print();
   };
 
-  const handleDownload = async () => {
     try {
       // Call backend to generate PDF
-      const response = await fetch('http://localhost:5000/api/exams/generate-pdf', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(exam)
+      const response = await api.post('/exams/generate-pdf', exam, {
+        responseType: 'blob'
       });
 
       if (!response.ok) {
@@ -35,7 +31,7 @@ export function ExamPreview({ exam, onBack, onRegenerate, editable = false, onUp
       }
 
       // Get PDF blob
-      const blob = await response.blob();
+      const blob = response.data;
 
       // Create download link
       const url = URL.createObjectURL(blob);
@@ -84,17 +80,10 @@ export function ExamPreview({ exam, onBack, onRegenerate, editable = false, onUp
             isActive: true
           };
 
-          const response = await fetch('http://localhost:5000/api/teacher/questions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(questionData)
-          });
+          const response = await api.post('/teacher/questions', questionData);
 
-          if (response.ok) {
-            const data = await response.json();
+          if (response.status === 201 || response.status === 200) {
+            const data = response.data;
             savedQuestionIds.push(data.question._id);
             console.log(`✓ Question saved: ${question.text.substring(0, 50)}...`);
           } else {
@@ -144,22 +133,9 @@ export function ExamPreview({ exam, onBack, onRegenerate, editable = false, onUp
 
       console.log('Creating exam with data:', examData);
 
-      const examResponse = await fetch('http://localhost:5000/api/teacher/exams', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(examData)
-      });
+      const examResponse = await api.post('/teacher/exams', examData);
 
-      if (!examResponse.ok) {
-        const error = await examResponse.json();
-        console.error('Exam creation failed:', error);
-        throw new Error(error.error || 'Failed to save exam');
-      }
-
-      const examResult = await examResponse.json();
+      const examResult = examResponse.data;
       console.log('✓ Exam created successfully:', examResult);
 
       toast.success('Exam finalized successfully!', { id: 'finalize' });

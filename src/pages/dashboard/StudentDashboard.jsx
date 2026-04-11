@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import api from '@/lib/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
-const API_BASE = "http://localhost:5000/api";
+
 const STUDENT_ID = "student_1";
 
 export default function StudentDashboard() {
@@ -61,14 +62,8 @@ export default function StudentDashboard() {
                 const token = localStorage.getItem('token');
 
                 // Fetch student's assigned exams
-                const assignmentsRes = await fetch('http://localhost:5000/api/student/assignments', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!assignmentsRes.ok) throw new Error('Failed to fetch assignments');
-                const assignmentsData = await assignmentsRes.json();
+                const assignmentsRes = await api.get('/student/assignments');
+                const assignmentsData = assignmentsRes.data;
 
                 setAssignments(assignmentsData.assignments || []);
             } catch (err) {

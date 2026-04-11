@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import api from '@/lib/api';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,14 +20,9 @@ export function ExamViewPage() {
 
     const fetchExamDetails = async () => {
         try {
-            const token = localStorage.getItem('token');
-
             // Fetch exam details
-            const examResponse = await fetch(`http://localhost:5000/api/teacher/exams/${examId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const examResponse = await api.get(`/teacher/exams/${examId}`);
+            const examData = examResponse.data;
 
             if (!examResponse.ok) {
                 throw new Error('Failed to fetch exam details');
@@ -36,14 +32,11 @@ export function ExamViewPage() {
             setExam(examData.exam);
 
             // Fetch all questions for this teacher
-            const questionsResponse = await fetch('http://localhost:5000/api/teacher/questions', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const questionsResponse = await api.get('/teacher/questions');
 
-            if (questionsResponse.ok) {
-                const questionsData = await questionsResponse.json();
+            if (questionsResponse.status === 200) {
+                const questionsData = questionsResponse.data;
+            } // Close if
 
                 // Filter questions that match this exam's criteria
                 // Get questions that were created around the same time as the exam
