@@ -20,6 +20,7 @@ export function ExamPreview({ exam, onBack, onRegenerate, editable = false, onUp
     window.print();
   };
 
+  const handleDownload = async () => {
     try {
       // Call backend to generate PDF
       const response = await api.post('/exams/generate-pdf', exam, {
@@ -385,3 +386,4 @@ export function ExamPreview({ exam, onBack, onRegenerate, editable = false, onUp
     </div>
   );
 }
+
