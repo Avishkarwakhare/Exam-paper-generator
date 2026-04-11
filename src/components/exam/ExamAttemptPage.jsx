@@ -28,12 +28,6 @@ export function ExamAttemptPage() {
         try {
             const response = await api.post(`/student/assignments/${assignmentId}/start`);
             const data = response.data;
-
-            if (!response.ok) {
-                throw new Error('Failed to start exam');
-            }
-
-            const data = await response.json();
             setAssignment(data.assignment);
             setQuestions(data.assignment.questions || []);
         } catch (error) {
@@ -65,12 +59,6 @@ export function ExamAttemptPage() {
 
             const response = await api.post(`/student/assignments/${assignmentId}/submit`, { answers: formattedAnswers });
             const data = response.data;
-
-            if (!response.ok) {
-                throw new Error('Failed to submit exam');
-            }
-
-            const data = await response.json();
             setResult(data.result);
             toast.success('Exam submitted successfully!');
         } catch (error) {

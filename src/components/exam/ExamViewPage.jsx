@@ -23,20 +23,15 @@ export function ExamViewPage() {
             // Fetch exam details
             const examResponse = await api.get(`/teacher/exams/${examId}`);
             const examData = examResponse.data;
-
-            if (!examResponse.ok) {
-                throw new Error('Failed to fetch exam details');
-            }
-
-            const examData = await examResponse.json();
             setExam(examData.exam);
 
             // Fetch all questions for this teacher
             const questionsResponse = await api.get('/teacher/questions');
+            let questionsData = null;
 
             if (questionsResponse.status === 200) {
-                const questionsData = questionsResponse.data;
-            } // Close if
+                questionsData = questionsResponse.data;
+            }
 
                 // Filter questions that match this exam's criteria
                 // Get questions that were created around the same time as the exam

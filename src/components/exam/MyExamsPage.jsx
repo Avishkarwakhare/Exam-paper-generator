@@ -18,12 +18,6 @@ export function MyExamsPage() {
         try {
             const response = await api.get('/teacher/exams');
             const data = response.data;
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch exams');
-            }
-
-            const data = await response.json();
             setExams(data.exams || []);
         } catch (error) {
             console.error('Error fetching exams:', error);
@@ -38,10 +32,6 @@ export function MyExamsPage() {
 
         try {
             await api.delete(`/teacher/exams/${examId}`);
-
-            if (!response.ok) {
-                throw new Error('Failed to delete exam');
-            }
 
             toast.success('Exam deleted successfully');
             fetchExams(); // Refresh list

@@ -38,12 +38,6 @@ export function AssignTestDialog({ open, onOpenChange, studentId, studentName, o
         try {
             const response = await api.get('/teacher/exams');
             const data = response.data;
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch exams');
-            }
-
-            const data = await response.json();
             setExams(data.exams || []);
         } catch (error) {
             console.error('Error fetching exams:', error);
@@ -67,12 +61,6 @@ export function AssignTestDialog({ open, onOpenChange, studentId, studentName, o
             });
 
             const data = response.data;
-
-            if (!response.ok) {
-                throw new Error('Failed to assign exam');
-            }
-
-            const data = await response.json();
             toast.success(`Exam assigned to ${studentName} successfully!`);
             onAssignComplete?.();
             onOpenChange(false);

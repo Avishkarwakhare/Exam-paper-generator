@@ -43,6 +43,7 @@ function DashboardOverview() {
     fetchDashboardData();
   }, []);
 
+  const fetchDashboardData = async () => {
     try {
       // Fetch current user
       const userResponse = await api.get('/auth/me');
@@ -223,6 +224,7 @@ function DashboardOverview() {
     </div>
   );
 }
+
 
 function CreateExamPage() {
   return (

@@ -26,10 +26,6 @@ export function ExamPreview({ exam, onBack, onRegenerate, editable = false, onUp
         responseType: 'blob'
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to generate PDF');
-      }
-
       // Get PDF blob
       const blob = response.data;
 
@@ -87,8 +83,7 @@ export function ExamPreview({ exam, onBack, onRegenerate, editable = false, onUp
             savedQuestionIds.push(data.question._id);
             console.log(`✓ Question saved: ${question.text.substring(0, 50)}...`);
           } else {
-            const errorData = await response.json();
-            console.error('Failed to save question:', errorData);
+            console.error('Failed to save question:', response.data);
             console.error('Question data that failed:', questionData);
           }
         } catch (error) {
